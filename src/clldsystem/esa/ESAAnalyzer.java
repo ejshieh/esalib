@@ -539,8 +539,34 @@ public class ESAAnalyzer {
 			}
 		} else if(args.length == 2) {  // for non-interactive mode
 			System.out.println(esa.getRelatedness(args[0], args[1]));
-		} else {
-			System.out.println("Please specify 0 arguments for interactive use, or exactly 2 strings as arguments for non-interactive use.");
+		} else if (args.length == 1) {
+            IConceptVector vec;
+            try {
+                vec = esa.getConceptVector(args[0]);
+                if (vec == null) {
+                    System.out.println("Found no concepts");
+                    return;
+                }
+                System.err.println("input vector dimensions: " + vec.count());
+            } catch (IOException ex) {
+                Logger.getLogger(ESAAnalyzer.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Encountered IOException when attempting getConceptVector");
+                return;
+            } catch (SQLException ex) {
+                Logger.getLogger(ESAAnalyzer.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Encountered SQLException when attempting getConceptVector");
+                return;
+            }
+
+            // Return the IDs of the concept vector
+            IConceptIterator it = vec.orderedIterator();
+	        ArrayList<Integer> conceptIds = new ArrayList<Integer>();
+            while (it.next()) {
+                conceptIds.add(it.getId());
+            }
+            System.out.println("Concept IDs: " + conceptIds.subList(0, 20).toString());
+        } else {
+			System.out.println("Please specify 0 arguments for interactive use, 1 string for printing the concept vector IDs, or exactly 2 strings as arguments for non-interactive use.");
 		}
 			
 		

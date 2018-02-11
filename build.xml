@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="dist" basedir=".">
+    <!--<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>-->
+    <property name="root" value="${basedir}/src"/>
+    <property name="build" value="${basedir}/build"/>
+    <property name="dist" value="${basedir}/dist"/>
+
+    <target name="init">
+        <tstamp/>
+        <mkdir dir="${build}"/>
+        <mkdir dir="${dist}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="${root}" destdir="${build}" debug="on" nowarn="on">
+            <classpath>
+                <fileset dir="${basedir}/lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="dist" depends="compile">
+        <mkdir dir="${dist}/lib"/>
+        <jar jarfile="${dist}/lib/esalib-${DSTAMP}.jar" basedir="${build}"/>
+    </target>
+</project>
